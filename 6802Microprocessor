@@ -1,0 +1,29 @@
+CPU "6800.TBL" ; Mikroişlemci tipinin tanımlanması
+HOF "MOT8" ; On altılık çıkış dosyasının tipi
+ORG 0F200H ; Programın başlangıç adresi
+BASLA: LDX #0F300H ; X dizin yazmacına F300H adresindeki sayısı yükle
+S1: LDAA #44H ; A akümülatörüne 44H sayısını yükle
+CMPA 0,X ; A akümülatörü ile X dizin yazmacındaki sayıyı karşılaştır
+BEQ S2 ; 16 bitlik sayının yüksek anlamlı 8 biti 44H'a eşit ise S2'ye dallan
+INX ; X dizin yazmacını 1 arttır
+INX ; X dizin yazmacını 1 arttır
+CPX #0F364H ; Son adrese ulaşıldı mı?
+BNE S1 ; Son adrese ulaşılmadıysa S1'e dallan
+BEQ SON ; Son adrese gelindiyse SON'a dallan
+S2: INX ; X dizin yazmacını 1 arttır
+CMPA 0,X ; A akümülatörü ile X dizin yazmacındaki sayıyı karşılaştır
+BEQ TANE ; 16 bitlik sayının düşük anlamlı 8 biti 44H'a eşit ise BUL'a dallan
+INX ; X dizin yazmacını 1 arttır
+CPX #0F364H ; Son adrese ulaşıldı mı?
+BNE S1 ; Son adrese ulaşılmadı ise S1’e dallan
+BEQ SON ; Son adrese ulaşıdı ise SON'a dallan
+TANE: INC 41H ; 41H adresindeki değeri 1 arttır
+INX ; X dizin yazmacını 1 arttır
+CPX #0F364 ; Son adrese ulaşıldı mı?
+BNE S1 ; Son adrese ulaşılmadı ise S1’e dallan
+SON: NOP
+ORG 0F300H ; Verilerin başlangıç adresi
+; VEKTÖR ADRESLERİ
+ORG 0FFFEH
+DWM BASLA ; Yeniden başlatma vektör adresi
+END
